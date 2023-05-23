@@ -7,21 +7,17 @@ import ChatScreen from './screens/ChatScreen';
 import LoginScreen from './screens/LoginScreen';
 import { onAuthStateChanged} from 'firebase/auth';
 import { FIREBASE_AUTH } from './firebase.js';
-import { useNavigation } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
     const [myUser,setUser] = useState(null);
-    //const navigation = useNavigation();
     
     useEffect(() => {
         onAuthStateChanged(FIREBASE_AUTH, (user) => {
             console.log('Ayan check here', user);
-            //setUser(user);
             setUser(user);
             console.log('myUser:', myUser);
-           // navigation.navigate("Home");
         });
     }, []);
 
