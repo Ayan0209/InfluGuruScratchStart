@@ -1,16 +1,27 @@
-import React, { useState } from 'react'
-import {View, TextInput, StyleSheet, Button} from 'react-native'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import {View, TextInput, StyleSheet, Button, Text, ImageBackground} from 'react-native'
 import useAuth from '../hooks/useAuth'
 import { FIREBASE_AUTH } from '../firebase';
 import { ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+
 
 const LoginScreen = () => {
+
+    
+    const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
-    //console.log(user);
+
+    useEffect(() => {
+        navigation.setOptions({
+          headerShown: false,
+        });
+      }, [navigation]);
+
     const signIn = async () => {
         setLoading(true);
         try{
@@ -42,16 +53,23 @@ const LoginScreen = () => {
 
     return(
         <View style={styles.container}>
-            <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
-            <TextInput value={password} secureTextEntry={true} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
+            <ImageBackground 
+                source={{uri: "https://tinder.com/static/tinder.png"}}
+                style = {styles.background}
+            >
+                <View style={styles.buttons}>
+                <TextInput value={email} style={styles.input} placeholder="Email" autoCapitalize="none" onChangeText={(text) => setEmail(text)}></TextInput>
+                <TextInput value={password} secureTextEntry={true} style={styles.input} placeholder="Password" autoCapitalize="none" onChangeText={(text) => setPassword(text)}></TextInput>
 
-            { loading ? <ActivityIndicator size="large" color="#0000ff" />
-                : <>
-                    <Button title="Login" onPress={signIn} />
-                    <Button title="Create an Account" onPress={signUp} />
-                </>
-            }
-
+                { loading ? <ActivityIndicator size="large" color="#0000ff" />
+                    : <>
+                        <Button title="Login" onPress={signIn} />
+                        <Button title="Create an Account" onPress={signUp} />
+                    </>
+                }
+                </View>
+            </ImageBackground>
+            
         </View>
         )
 }
@@ -60,7 +78,6 @@ export default LoginScreen
 
 const styles = StyleSheet.create({
     container: {
-        marginHorizontal:20,
         flex: 1,
         justifyContent: 'center',
     },
@@ -71,5 +88,17 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 10,
         backgroundColor: '#fff'
+    },
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+    },
+    buttons: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 3,
     }
 });

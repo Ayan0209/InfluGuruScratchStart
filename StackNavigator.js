@@ -24,7 +24,9 @@ const StackNavigator = () => {
     console.log('This is outside func', myUser);
 
     return(
-        <Stack.Navigator>
+        <Stack.Navigator screenOptions={{
+            headerShown: false,
+        }}>
             {myUser ? (
             <>
                 <Stack.Screen name="Home" component={HomeScreen}/>
