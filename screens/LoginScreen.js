@@ -6,7 +6,7 @@ import { ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
-
+const staticImage  = require("../images/LoadingBackground.png");
 const LoginScreen = () => {
 
     
@@ -54,7 +54,7 @@ const LoginScreen = () => {
     return(
         <View style={styles.container}>
             <ImageBackground 
-                source={{uri: "https://tinder.com/static/tinder.png"}}
+                source={staticImage}
                 style = {styles.background}
             >
                 <View style={styles.buttons}>
