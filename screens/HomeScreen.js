@@ -166,19 +166,27 @@ const HomeScreen = () => {
                             },
                         }
                     }}
-                    renderCard={(card) => card ? (
-                        <View key={card.id} style={[styles.card, styles.cardShadow]}>
-                            <Image style={styles.cardImg} source={{uri: card.photoURL }}/>
+                    renderCard={(card) =>
+                        card ? (
+                          <View key={card.id} style={[styles.card, styles.cardShadow]}>
+                            <Image style={styles.cardImg} source={{ uri: card.photoURL }} />
                             <View style={styles.cardTxt}>
-                                <View>
-                                    <Text style={styles.brandName}>{card.displayName}</Text>
-                                    <Text style={styles.productName}>{card.gender}</Text>
+                              <View>
+                                <Text style={styles.brandName}>{card.displayName}</Text>
+                                <Text style={styles.productName}>{card.gender}</Text>
+                              </View>
+                              {card.category && (
+                                <View style={styles.categoryContainer}>
+                                  {card.category.map((categoryItem, index) => (
+                                    <View key={index} style={styles.categoryItemContainer}>
+                                      <Text style={styles.categoryItemText}>{categoryItem}</Text>
+                                    </View>
+                                  ))}
                                 </View>
-                                <Text style={styles.category}>{card.category}</Text>
+                              )}
                             </View>
-                        </View>
-                        
-                    ) : (
+                          </View>
+                        ) : (
                         <View style={[styles.card, styles.cardShadow]}>
                             <Text style={[styles.text, {marginLeft: 500}]}>No more profiles</Text>
                             <Image
@@ -300,5 +308,20 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(47, 196, 50, 0.5)',
         borderRadius: 20,
         padding: 8,
+      },
+      categoryContainer: {
+        flexDirection: 'row',
+        marginTop: 8,
+      },
+      categoryItemContainer: {
+        backgroundColor: 'rgba(227, 151, 39, 0.7)',
+        borderRadius: 10,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        marginRight: 4,
+      },
+      categoryItemText: {
+        color: 'white',
+        fontSize: 14,
       },
 });
