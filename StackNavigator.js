@@ -7,6 +7,10 @@ import ChatScreen from './screens/ChatScreen';
 import LoginScreen from './screens/LoginScreen';
 import { onAuthStateChanged} from 'firebase/auth';
 import { FIREBASE_AUTH } from './firebase.js';
+import ModalScreen from './screens/ModalScreen';
+import MatchedScreen from './screens/MatchedScreen';
+import MessageScreen from './screens/MessageScreen';
+import InterestsScreen from './screens/InterestsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,8 +33,18 @@ const StackNavigator = () => {
         }}>
             {myUser ? (
             <>
-                <Stack.Screen name="Home" component={HomeScreen}/>
-                <Stack.Screen name="Chat" component={ChatScreen}/>
+                <Stack.Group>
+                    <Stack.Screen name="Home" component={HomeScreen}/>
+                    <Stack.Screen name="Chat" component={ChatScreen}/>
+                    <Stack.Screen name="Message" component={MessageScreen}/>
+                </Stack.Group>
+                <Stack.Group screenOptions={{presentation: "modal"}}>
+                    <Stack.Screen name="Modal" component={ModalScreen}/>
+                    <Stack.Screen name="Interests" component={InterestsScreen}/>
+                </Stack.Group>
+                <Stack.Group screenOptions={{presentation: "transparentModal"}}>
+                    <Stack.Screen name="Match" component={MatchedScreen}/>
+                </Stack.Group>                
             </>
             ) : (
                 <Stack.Screen name="Login" component={LoginScreen}/>
