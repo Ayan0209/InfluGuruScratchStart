@@ -11,8 +11,14 @@ import ModalScreen from './screens/ModalScreen';
 import MatchedScreen from './screens/MatchedScreen';
 import MessageScreen from './screens/MessageScreen';
 import InterestsScreen from './screens/InterestsScreen';
+import NewProfile from './screens/NewProfile';
+import BusinessModalScreen from './screens/BusinessModalScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import CardScreen from './screens/CardScreen';
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
 
 const StackNavigator = () => {
     const [myUser,setUser] = useState(null);
@@ -37,9 +43,12 @@ const StackNavigator = () => {
                     <Stack.Screen name="Home" component={HomeScreen}/>
                     <Stack.Screen name="Chat" component={ChatScreen}/>
                     <Stack.Screen name="Message" component={MessageScreen}/>
+                    <Stack.Screen name="Card" component={CardScreen} />
                 </Stack.Group>
                 <Stack.Group screenOptions={{presentation: "modal"}}>
+                    <Stack.Screen name="ProfileType" component={NewProfile}/>
                     <Stack.Screen name="Modal" component={ModalScreen}/>
+                    <Stack.Screen name="BrandModal" component={BusinessModalScreen}/>
                     <Stack.Screen name="Interests" component={InterestsScreen}/>
                 </Stack.Group>
                 <Stack.Group screenOptions={{presentation: "transparentModal"}}>

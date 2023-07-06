@@ -4,15 +4,16 @@ import {View, Text, Button, Image, StyleSheet, ImageBackground, Dimensions} from
 import { NavigationProp } from '@react-navigation/native'
 import { FIREBASE_AUTH, db } from '../firebase'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { TouchableOpacity } from 'react-native-web'
+import { TouchableOpacity } from 'react-native'
 import { getAuth } from 'firebase/auth'
 import { AntDesign, Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Swiper from 'react-native-deck-swiper';
 import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import generateId from '../lib/generateId'
+import { StatusBar } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
-const cardHeight = screenHeight * 0.75;
+const cardHeight = screenHeight * 0.7;
 
 const HomeScreen = () => {
     const navigation = useNavigation();
@@ -30,7 +31,7 @@ const HomeScreen = () => {
         onSnapshot(doc(db, "users", user.uid), (snapshot) => {
             console.log("Snapshot:", snapshot)
             if(!snapshot.exists()){
-                navigation.navigate("Modal");
+                navigation.navigate("ProfileType");
             }
         }),
         []
@@ -114,27 +115,29 @@ const HomeScreen = () => {
         setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id), userSwiped);
     }
 
-    console.log(profiles);
+    //console.log(profiles);
 
     return(
-        <View style={{flex: 1}}>
+        <>
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
+        <View style={styles.fullScreen}>
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => FIREBASE_AUTH.signOut()}>
+                <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
                     <MaterialIcons name="account-circle" style={styles.imageLeft} size={50} color="#eba134" />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
+                <TouchableOpacity onPress={() => FIREBASE_AUTH.signOut()}>
                     <Image source={staticImage} style={styles.imageCenter} alt="logo"/>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => navigation.navigate("Chat")}>
                     <Ionicons name="chatbubbles-sharp" size={50} style={styles.imageRight} color="#eba134"/>
                 </TouchableOpacity>             
             </View>
-            <View>
+            <View style={styles.cardContainer}>
                 <Swiper 
                     ref={swipeRef}
-                    containerStyle={{backgroundColor: "transparent"}}
+                    containerStyle={styles.swiperContainer}
                     cards={profiles}
-                    stackSize={5}
+                    stackSize={2}
                     cardIndex={0}
                     animateCardOpacity
                     verticalSwipe={false}
@@ -145,6 +148,10 @@ const HomeScreen = () => {
                     onSwipedRight={(cardIndex) => {
                         console.log('Swipe match')
                         swipeRight(cardIndex)
+                    }}
+                    onTapCard={(cardIndex) => {
+                        //console.log('passed user is', profiles[cardIndex])
+                        navigation.navigate('Card', { user: profiles[cardIndex] })
                     }}
                     overlayLabels={{
                         left: {
@@ -168,6 +175,7 @@ const HomeScreen = () => {
                     }}
                     renderCard={(card) =>
                         card ? (
+                          
                           <View key={card.id} style={[styles.card, styles.cardShadow]}>
                             <Image style={styles.cardImg} source={{ uri: card.photoURL }} />
                             <View style={styles.cardTxt}>
@@ -188,9 +196,9 @@ const HomeScreen = () => {
                           </View>
                         ) : (
                         <View style={[styles.card, styles.cardShadow]}>
-                            <Text style={[styles.text, {marginLeft: 500}]}>No more profiles</Text>
+                            <Text style={[styles.text]}>No more profiles</Text>
                             <Image
-                                style={[styles.cardImg, {height: 500, width: 500}]}
+                                style={[styles.cardImg]}
                                 source={{uri: "https://cdn-icons-png.flaticon.com/512/6009/6009746.png"}} 
                                 />
                         </View>
@@ -206,6 +214,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
             </View>
         </View>
+        </>
         )
 }
 
@@ -213,6 +222,10 @@ export default HomeScreen
 
 
 const styles = StyleSheet.create({
+    fullScreen: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
     deck: {
         flex: 1,
     },
@@ -220,7 +233,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 10,
+        backgroundColor: 'white',
     },
     imageLeft: {
         marginLeft: 10,
@@ -239,6 +252,15 @@ const styles = StyleSheet.create({
         margin: 50,
         justifyContent: 'center',
     },
+    cardContainer: {
+        flex: 1,
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+    },
+    swiperContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+    },
     card: {
         position: 'relative',
         backgroundColor: 'white',
@@ -251,8 +273,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         top: 0,
         left: 0,
-        width: '100%',
         height: '100%',
+        width: '100%',
     },
     cardTxt: {
         position: 'absolute',

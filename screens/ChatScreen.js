@@ -10,6 +10,11 @@ const ChatScreen = () => {
         <SafeAreaView>
             <Header title="Chat" />
             <ChatList />
+            <View>
+                <Text>
+                    This is the chat screen.
+                </Text>
+            </View>
         </SafeAreaView>
         )
 }

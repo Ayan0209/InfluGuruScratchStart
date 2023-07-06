@@ -1,5 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, StyleSheet, Button, Text, ImageBackground, Dimensions, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Button,
+  Text,
+  ImageBackground,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  Keyboard,
+} from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -14,6 +29,7 @@ const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [logoVisible, setLogoVisible] = useState(true);
   const auth = FIREBASE_AUTH;
 
   useEffect(() => {
@@ -22,13 +38,28 @@ const LoginScreen = () => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setLogoVisible(false);
+    });
+
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setLogoVisible(true);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const signIn = async () => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      //console.log(response);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     } finally {
       setLoading(false);
     }
@@ -48,43 +79,52 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.background}>
-        <View style={styles.logoContainer}>
-          <Image source={staticImage} style={styles.logoImg}/>
-        </View>
-        <View style={styles.bottomContainer}>
-          <Text style={styles.infoText}>Login/Sign up to continue</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              value={email}
-              style={styles.input}
-              placeholder="Email"
-              autoCapitalize="none"
-              onChangeText={(text) => setEmail(text)}
-              placeholderTextColor="#E39727"
-            />
-            <TextInput
-              value={password}
-              secureTextEntry={true}
-              style={styles.input}
-              placeholder="Password"
-              autoCapitalize="none"
-              onChangeText={(text) => setPassword(text)}
-              placeholderTextColor="#E39727"
-            />
-          </View>
-          {loading ? (
-            <ActivityIndicator size="large" color="#0000ff" />
-          ) : (
-            <>
-              <Button title="Login" onPress={signIn} color="#E39727" />
-              <View style={styles.buttonGap} />
-              <Button title="Create an Account" onPress={signUp} color="#E39727" />
-            </>
+    <>
+    <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+    <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        
+          {logoVisible && (
+            <View style={styles.logoContainer}>
+              <Image source={staticImage} style={styles.logoImg} />
+            </View>
           )}
-        </View>
-        <View style={styles.iconsContainer}>
+          <View style={styles.bottomContainer}>
+            <Text style={styles.infoText}>Login/Sign up to continue</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                value={email}
+                style={styles.input}
+                placeholder="Email"
+                autoCapitalize="none"
+                onChangeText={(text) => setEmail(text)}
+                placeholderTextColor="#E39727"
+              />
+              <TextInput
+                value={password}
+                secureTextEntry={true}
+                style={styles.input}
+                placeholder="Password"
+                autoCapitalize="none"
+                onChangeText={(text) => setPassword(text)}
+                placeholderTextColor="#E39727"
+              />
+            </View>
+            {loading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <>
+                <Button title="Login" onPress={signIn} color="#E39727" />
+                <View style={styles.buttonGap} />
+                <Button title="Create an Account" onPress={signUp} color="#E39727" />
+              </>
+            )}
+          </View>
+          <View style={styles.iconsContainer}>
             <TouchableOpacity style={styles.icon}>
               <AntDesign name="google" size={24} color="#E39727" />
             </TouchableOpacity>
@@ -94,9 +134,10 @@ const LoginScreen = () => {
             <TouchableOpacity style={styles.icon}>
               <AntDesign name="facebook-square" size={24} color="#E39727" />
             </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+          </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
+    </>
   );
 };
 
@@ -108,7 +149,7 @@ const windowHeight = Dimensions.get('window').height;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     backgroundColor: '#fff',
   },
   background: {
@@ -117,13 +158,9 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flex: 1,
-    marginTop: 25,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    marginBottom: 16,
   },
   logoImg: {
     height: 300,
@@ -136,9 +173,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowRadius: 4,
-    elevation: 4,
   },
-  
   bottomContainer: {
     flex: 2,
     paddingHorizontal: 32,
@@ -161,26 +196,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     padding: 10,
-    backgroundColor: '#fff',
-    borderColor: '#E39727',
-    color: '#000',
-    fontFamily: 'Rubik',
-    fontWeight: 'bold',
   },
   buttonGap: {
-    marginVertical: 8
+    marginBottom: 12,
   },
   iconsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 'auto',
-    marginBottom: 20,
     paddingHorizontal: 32,
+    marginBottom: 16,
   },
   icon: {
-    borderWidth: 1,
-    borderColor: '#E39727',
-    borderRadius: 4,
-    padding: 8,
+    marginHorizontal: 8,
   },
 });

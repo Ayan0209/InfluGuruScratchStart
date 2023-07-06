@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Picker, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { getAuth } from 'firebase/auth';
 import Header from '../components/Header';
@@ -22,8 +23,7 @@ const ModalScreen = () => {
 
   const handleUpdateProfile = () => {
     if (is18Plus) {
-      setDoc(doc(db, 'users', user.uid), {
-        id: user.uid,
+      updateDoc(doc(db, 'users', user.uid), {
         displayName: firstName,
         gender: gender,
         photoURL: image,
