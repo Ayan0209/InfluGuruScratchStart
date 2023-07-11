@@ -1,17 +1,30 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 const MatchedScreen = () => {
   const navigation = useNavigation();
+  const auth = getAuth();
+  const user = auth.currentUser;
   const { params } = useRoute();
 
   const { loggedInProfile, userSwiped } = params;
+  const userType = loggedInProfile.type;
 
   const handleStartChatting = () => {
     // Logic for navigating to the ChatScreen
     navigation.goBack();
     navigation.navigate("Chat");
+  };
+
+  const getTitleText = () => {
+    if (userType === 'influencer') {
+      return 'Congratulations! You matched with a brand';
+    } else if (userType === 'brand') {
+      return 'Congratulations! You matched with an Influencer';
+    }
+    return '';
   };
 
   const styles = StyleSheet.create({
@@ -26,6 +39,9 @@ const MatchedScreen = () => {
       fontWeight: 'bold',
       color: '#fff',
       marginBottom: 16,
+      textAlign: 'center', // Center the text
+      marginLeft: 16, // Add left margin
+      marginRight: 16, // Add right margin
     },
     profilePicture: {
       width: 150,
@@ -54,7 +70,7 @@ const MatchedScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>You found a Job</Text>
+      <Text style={styles.title}>{getTitleText()}</Text>
       <Image source={{ uri: userSwiped.photoURL }} style={styles.profilePicture} />
       <Text style={styles.fullName}>{userSwiped.fullName}</Text>
       <TouchableOpacity style={styles.button} onPress={handleStartChatting}>

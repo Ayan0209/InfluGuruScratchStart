@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native'
 import { getAuth } from 'firebase/auth'
 import { AntDesign, Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
+import { collection, collectionGroup, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import generateId from '../lib/generateId'
 import { StatusBar } from 'react-native';
 
@@ -20,23 +20,22 @@ const HomeScreen = () => {
     const auth = getAuth();
     const user = auth.currentUser;
     const staticImage = require("../images/Logo.png");
-    const profile = require("../images/profileIcon.png");
     const chatIcon = require("../images/chat.png");  
     const swipeRef = useRef(null);
     const [profiles, setProfiles] = useState([]);
-    
-    //console.log('This is home screen user: ', user);
+    const [userType, setUserType] = useState('');
 
     useEffect(() => 
         onSnapshot(doc(db, "users", user.uid), (snapshot) => {
-            console.log("Snapshot:", snapshot)
+            //console.log("Snapshot:", snapshot)
             if(!snapshot.exists()){
                 navigation.navigate("ProfileType");
+            } else {
+                setUserType(snapshot.data().type);
             }
         }),
         []
     );
-
     useEffect(() => {
         let unsub;
 
@@ -54,19 +53,78 @@ const HomeScreen = () => {
             const swipesUserIds = (await swipes).length > 0 ? swipes : ['test'];
 
             unsub = onSnapshot(query(collection(db, 'users'), where("id", "not-in", [...passedUserIds, ...swipesUserIds])), snapshot => {
-                setProfiles(
-                    snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
-                        id: doc.id,
-                        ...doc.data(),
-                    }))
-                );
-            });
-        };
+                const filteredProfiles = snapshot.docs
+                  .filter(doc => doc.id !== user.uid) // Exclude the signed-in user
+                  .flatMap(doc => {
+                    const userData = doc.data();
+                    const products = userData.products || [];
+                    //console.log("These are the products: ", products);
 
+                    if (userType === 'influencer' && userData.type === 'brand') {
+                      // Create a card for each product in the "products" array
+                      return products.map(product => ({
+                        id: userData.id,
+                        displayName: userData.displayName,
+                        photoURL: userData.photoURL,
+                        productName: product.productName,
+                        productCategory: product.productCategory,
+                        city: userData.city,
+                        promotionTypes: product.promotionTypes,
+                        type: userData.type,
+                        // Include other product properties in the card if needed
+                      }));
+                    } else if (userType === 'brand' && userData.type === 'influencer') {
+                      // Create a card for the influencer profile
+                      return [{
+                        id: userData.id,
+                        displayName: userData.displayName,
+                        photoURL: userData.photoURL,
+                        productName: userData.gender,
+                        category: userData.category,
+                        age: userData.age,
+                        bio: userData.bio,
+                        email: userData.email,
+                        city: userData.city,
+                        instaUserName: userData.instaUserName,
+                        type: userData.type,
+                         // Set an empty string for productName in influencer cards
+                        // Include other influencer properties in the card if needed
+                      }];
+                    } else {
+                      return [];
+                    }
+                  });
+              
+                setProfiles(filteredProfiles);
+              });
+            /*unsub = onSnapshot(query(collection(db, 'users'), where("id", "not-in", [...passedUserIds, ...swipesUserIds])), snapshot => {
+                const filteredProfiles = snapshot.docs
+                .filter(doc => doc.id !== user.uid) // Exclude the signed-in user
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(profile => {
+                    
+                if (userType === 'influencer') {
+                // Filter for brand profiles
+                    return profile.type === 'brand';
+                } 
+                else if(userType === 'brand'){
+                    // Filter for influencer profiles with the signed-in user's ID in swipes collection
+                    return profile.type === 'influencer'; 
+                }
+                else{
+                    return false;
+                }
+            });
+
+            setProfiles(filteredProfiles);
+            });*/
+        };
         fetchCards();
         return unsub;
-    }, [db])
+    }, [db])    
+    //console.log("User: ", userType);
 
+    console.log("These are the profiles: ", profiles);  
     const swipeLeft = async (cardIndex) => {
         if(!profiles[cardIndex]) return;
 
@@ -115,14 +173,23 @@ const HomeScreen = () => {
         setDoc(doc(db, 'users', user.uid, 'swipes', userSwiped.id), userSwiped);
     }
 
-    //console.log(profiles);
+    
 
     return(
         <>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <View style={styles.fullScreen}>
             <View style={styles.container}>
-                <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
+                <TouchableOpacity onPress={() => {
+                    if (userType === "influencer") {
+                      navigation.navigate("InfluencerProfile");
+                    } else if (userType === "brand") {
+                      navigation.navigate("BrandProfile");
+                    } else {
+                      // Default navigation
+                      navigation.navigate("Profile");
+                    }
+                  }}>
                     <MaterialIcons name="account-circle" style={styles.imageLeft} size={50} color="#eba134" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => FIREBASE_AUTH.signOut()}>
@@ -150,7 +217,7 @@ const HomeScreen = () => {
                         swipeRight(cardIndex)
                     }}
                     onTapCard={(cardIndex) => {
-                        //console.log('passed user is', profiles[cardIndex])
+                        console.log('passed user is', profiles[cardIndex])
                         navigation.navigate('Card', { user: profiles[cardIndex] })
                     }}
                     overlayLabels={{
@@ -175,13 +242,12 @@ const HomeScreen = () => {
                     }}
                     renderCard={(card) =>
                         card ? (
-                          
                           <View key={card.id} style={[styles.card, styles.cardShadow]}>
                             <Image style={styles.cardImg} source={{ uri: card.photoURL }} />
                             <View style={styles.cardTxt}>
                               <View>
                                 <Text style={styles.brandName}>{card.displayName}</Text>
-                                <Text style={styles.productName}>{card.gender}</Text>
+                                <Text style={styles.productName}>{card.productName}</Text>
                               </View>
                               {card.category && (
                                 <View style={styles.categoryContainer}>
@@ -219,7 +285,6 @@ const HomeScreen = () => {
 }
 
 export default HomeScreen
-
 
 const styles = StyleSheet.create({
     fullScreen: {
@@ -269,10 +334,9 @@ const styles = StyleSheet.create({
         height: cardHeight,
     },
     cardImg: {
+        alignItems: 'center',
         position: 'absolute',
         borderRadius: 10,
-        top: 0,
-        left: 0,
         height: '100%',
         width: '100%',
     },
@@ -307,7 +371,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 1.41,
         elevation: 2,
-
       },
       swipeButtons: {
         position: 'absolute',

@@ -4,8 +4,10 @@ import Header from '../components/Header';
 import { getFirestore, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../firebase';
+import { useNavigation } from '@react-navigation/native';
 
 const InterestsScreen = () => {
+  const navigation = useNavigation();
   const [selectedInterests, setSelectedInterests] = useState([]);
   const auth = getAuth();
   const user = auth.currentUser;
@@ -29,7 +31,7 @@ const InterestsScreen = () => {
         timestamp: serverTimestamp(),
       })
         .then(() => {
-          navigation.navigate('Home');
+          navigation.navigate('Socials');
         })
         .catch((error) => {
           alert(error.message);

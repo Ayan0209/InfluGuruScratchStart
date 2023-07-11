@@ -15,6 +15,11 @@ import NewProfile from './screens/NewProfile';
 import BusinessModalScreen from './screens/BusinessModalScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import CardScreen from './screens/CardScreen';
+import InfluencerProfile from './screens/InfluencerProfile';
+import BrandProfile from './screens/BrandProfile';
+import Socials from './screens/Socials';
+import ProductsScreen from './screens/ProductsScreen';
+import ProductList from './screens/ProductList';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,7 +36,7 @@ const StackNavigator = () => {
         });
     }, []);
 
-    console.log('This is outside func', myUser);
+    //console.log('This is outside func', myUser);
 
     return(
         <Stack.Navigator screenOptions={{
@@ -49,7 +54,12 @@ const StackNavigator = () => {
                     <Stack.Screen name="ProfileType" component={NewProfile}/>
                     <Stack.Screen name="Modal" component={ModalScreen}/>
                     <Stack.Screen name="BrandModal" component={BusinessModalScreen}/>
+                    <Stack.Screen name="InfluencerProfile" component={InfluencerProfile}/>
+                    <Stack.Screen name="BrandProfile" component={BrandProfile}/>
                     <Stack.Screen name="Interests" component={InterestsScreen}/>
+                    <Stack.Screen name="Socials" component={Socials}/>
+                    <Stack.Screen name="Products" component={ProductsScreen}/>
+                    <Stack.Screen name="ProductList" component={ProductList}/>
                 </Stack.Group>
                 <Stack.Group screenOptions={{presentation: "transparentModal"}}>
                     <Stack.Screen name="Match" component={MatchedScreen}/>

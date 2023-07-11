@@ -8,8 +8,6 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const ChatRow = ({ matchDetails }) => {
 
-  console.log("You have reached the chatrow screen.")
-
   const navigation = useNavigation();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -26,7 +24,7 @@ const ChatRow = ({ matchDetails }) => {
     )
   , [matchDetails, db])
 
-  //console.log('The matched user is:', matchedUserInfo.displayName)
+  //console.log('The matched user is:', matchDetails)
 
   const styles = StyleSheet.create({
     container: {
@@ -68,10 +66,11 @@ const ChatRow = ({ matchDetails }) => {
   });
   
   return (
-    <SafeAreaView>
+    
     <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("Message", {
         matchDetails,
     })}>
+      <Image style={styles.image} source={{uri: matchedUserInfo?.photoURL}}/>
       <View style={styles.userInfoContainer}>
         <Text style={styles.displayName}>
             {matchedUserInfo?.displayName}
@@ -79,7 +78,7 @@ const ChatRow = ({ matchDetails }) => {
         <Text style={styles.sayHiText}>{lastMessage || "Say Hi!"}</Text>
       </View>
     </TouchableOpacity>
-    </SafeAreaView>
+    
   );
 };
 

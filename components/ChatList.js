@@ -9,7 +9,7 @@ import ChatRow from './ChatRow';
 
 const ChatList = () => {
   const [matches, setMatches] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const auth = getAuth();
   const user = auth.currentUser;
 
@@ -22,34 +22,36 @@ const ChatList = () => {
           ...doc.data(),
         }));
         setMatches(matchesData);
-        setLoading(false); // Set loading state to false after data retrieval
+        setLoading(false);
       }
     );
 
-    return () => unsubscribe(); // Cleanup function to unsubscribe from the snapshot listener
+    return () => unsubscribe();
   }, [user]);
 
   if (loading) {
     return (
-      <View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Loading...</Text>
       </View>
     );
   }
 
-  console.log('This is matches', matches);
-
-  return matches.length > 0 ? (
-    <FlatList
-      style={{ flex: 1 }}
-      data={matches}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <ChatRow matchDetails={item} />}
-    />
-  ) : (
-    <View>
-      <Text>No Matches at the moment!</Text>
-    </View>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      
+      <FlatList
+        contentContainerStyle={{ flexGrow: 1 }}
+        data={matches}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <ChatRow matchDetails={item}/>}
+        ListEmptyComponent={() => (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>No Matches at the moment!</Text>
+          </View>
+        )}
+      />
+    </SafeAreaView>
   );
 };
 

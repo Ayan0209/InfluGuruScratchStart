@@ -1,47 +1,70 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { getAuth } from 'firebase/auth';
+import * as ImagePicker from 'expo-image-picker';
 import Header from '../components/Header';
 
 const BusinessModalScreen = () => {
   const navigation = useNavigation();
-  const [brandName, setBrandName] = useState('');
-  const [productName, setProductName] = useState('');
-  const [productImgUrl, setProductImgUrl] = useState('');
-  const [promotionTypes, setPromotionTypes] = useState([]);
+  const [photoURL, setLogoImage] = useState('');
+  const [displayName, setBrandName] = useState('');
+  const [category, setCategory] = useState('');
+  const [city, setCity] = useState('');
   const auth = getAuth();
   const user = auth.currentUser;
 
-  const handlePromotionTypeToggle = (type) => {
-    if (promotionTypes.includes(type)) {
-      setPromotionTypes(promotionTypes.filter((item) => item !== type));
-    } else {
-      setPromotionTypes([...promotionTypes, type]);
+  useEffect(() => {
+    const fetchBusinessData = async () => {
+      try {
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const businessData = docSnap.data();
+          setLogoImage(businessData.photoURL || '');
+          setBrandName(businessData.displayName || '');
+          setCategory(businessData.category || '');
+          setCity(businessData.city || '');
+        }
+      } catch (error) {
+        console.error('Error fetching business data:', error);
+      }
+    };
+
+    fetchBusinessData();
+  }, []);
+
+  const handleChooseLogoImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert('Permission Denied', 'You need to grant permission to access the media library.');
+      return;
+    }
+  
+    const imageResult = await ImagePicker.launchImageLibraryAsync();
+    if (!imageResult.cancelled) {
+      setLogoImage(imageResult.uri);
     }
   };
 
   const handleUpdateProfile = () => {
     updateDoc(doc(db, 'users', user.uid), {
-      displayName: brandName,
-      gender: productName,
-      photoURL: productImgUrl,
-      promotionTypes: promotionTypes,
+      photoURL,
+      displayName,
+      category,
+      city,
       timestamp: serverTimestamp(),
     })
       .then(() => {
-        navigation.navigate('Interests');
+        console.log('Business profile updated!');
       })
       .catch((error) => {
-        alert(error.message);
+        console.error('Error updating business profile:', error);
       });
-  };
-
-  const handleChooseInterests = () => {
-    navigation.navigate('Interests');
   };
 
   const styles = StyleSheet.create({
@@ -64,26 +87,26 @@ const BusinessModalScreen = () => {
       marginBottom: 8,
       color: '#000',
     },
-    iconContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+    logoContainer: {
       marginBottom: 16,
-    },
-    icon: {
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      borderWidth: 1,
-      borderColor: '#E39727',
       alignItems: 'center',
-      justifyContent: 'center',
     },
-    selectedIcon: {
+    logoImage: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      resizeMode: 'cover',
+    },
+    logoButton: {
+      marginTop: 8,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 4,
       backgroundColor: '#E39727',
     },
-    buttonText: {
+    logoButtonText: {
       color: '#fff',
-      fontSize: 16,
+      fontSize: 14,
       fontWeight: 'bold',
       textAlign: 'center',
     },
@@ -94,68 +117,49 @@ const BusinessModalScreen = () => {
       marginBottom: 16,
       backgroundColor: '#E39727',
     },
+    buttonText: {
+      color: '#fff',
+      fontSize: 16,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
   });
 
   return (
     <View style={styles.container}>
       <Header title="Profile Details" />
       <View style={styles.inputContainer}>
+        <View style={styles.logoContainer}>
+          {photoURL ? (
+            <Image source={{ uri: photoURL }} style={styles.logoImage} />
+          ) : (
+            <Image source={require('../images/profileIcon.png')} style={styles.logoImage} />
+          )}
+          <TouchableOpacity style={styles.logoButton} onPress={handleChooseLogoImage}>
+            <Text style={styles.logoButtonText}>Choose Logo</Text>
+          </TouchableOpacity>
+        </View>
         <TextInput
           style={styles.input}
           placeholder="Brand Name"
-          value={brandName}
+          value={displayName}
           onChangeText={setBrandName}
         />
         <TextInput
           style={styles.input}
-          placeholder="Product Name"
-          value={productName}
-          onChangeText={setProductName}
+          placeholder="Category"
+          value={category}
+          onChangeText={setCategory}
         />
         <TextInput
           style={styles.input}
-          placeholder="Product Image URL"
-          value={productImgUrl}
-          onChangeText={setProductImgUrl}
+          placeholder="City"
+          value={city}
+          onChangeText={setCity}
         />
-      </View>
-      <View style={styles.iconContainer}>
-        <TouchableOpacity
-          style={[
-            styles.icon,
-            promotionTypes.includes('post') && styles.selectedIcon,
-          ]}
-          onPress={() => handlePromotionTypeToggle('post')}
-        >
-          <Ionicons name="paper-plane-outline" size={40} color="#E39727" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.icon,
-            promotionTypes.includes('story') && styles.selectedIcon,
-          ]}
-          onPress={() => handlePromotionTypeToggle('story')}
-        >
-          <Ionicons name="play-outline" size={40} color="#E39727" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.icon,
-            promotionTypes.includes('reels') && styles.selectedIcon,
-          ]}
-          onPress={() => handlePromotionTypeToggle('reels')}
-        >
-          <Ionicons name="film-outline" size={40} color="#E39727" />
-        </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
         <Text style={styles.buttonText}>Update Profile</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleChooseInterests}
-      >
-        <Text style={styles.buttonText}>Choose Interests</Text>
       </TouchableOpacity>
     </View>
   );
