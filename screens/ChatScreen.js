@@ -5,11 +5,11 @@ import Header from '../components/Header';
 import ChatList from '../components/ChatList';
 
 const ChatScreen = () => {
-  
+
 
   return (
     <View style={styles.container}>
-      <Header title="Chat" />
+      {/*<Header title="Chat" />*/}
       <ChatList />
     </View>
   );

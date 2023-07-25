@@ -1,15 +1,40 @@
-import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
+import React, {useEffect, useRef, useState} from 'react';
+import axios from 'axios';
+import InstagramLogin from 'react-native-instagram-login';
+import {colors} from "../utils/constants";
 
 const CardScreen = ({ route }) => {
   const navigation = useNavigation();
   const { user } = route.params;
   const userName = user.instaUserName;
-
+  const [profileData, setProfileData] = useState(null);
   //console.log("The card data is: ", user);
+  const insRef = useRef();
+  const [token, setToken] = useState(null);
+
+  const ACCESS_TOKEN = 'IGQVJYRjB4Q3FiTWZAOTTVMcktrX3RpRDNWbjJDUndoUDBKNXZAvVGtLSjFUN1BFMk13MkhGM2ZAXZAXVSLXYtYUNrOW1Kd3ZA6ZAWE2a0NYU0VqOFJscXZApRThKUzRaX2JoQUhUb3hTVjRicmV2LUx3MkdxTQZDZD';
+  //const API_ENDPOINT = 'https://graph.instagram.com/me/media?fields=id,username,media_count,profile_picture_url,caption,media_type,media_url,thumbnail_url,permalink&access_token=' + ACCESS_TOKEN;
+  const API_ENDPOINT = 'https://graph.instagram.com/me?fields=username,profile_picture_url,followers_count&access_token=' + ACCESS_TOKEN;
+  const onClear = () => {
+
+  };
+    useEffect(() => {
+      const fetchProfileData = async () => {
+        try {
+          const response = await axios.get(API_ENDPOINT);
+
+          console.log("insta profile data",response.data);
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
+        }
+      };
+
+      fetchProfileData();
+    }, []);
 
   const openInstagramProfile = async () => {
     const profileUrl = `https://www.instagram.com/${userName}/`;
@@ -77,6 +102,29 @@ const CardScreen = ({ route }) => {
             <Text style={styles.location}>{user.city}</Text>
           </>
         )}
+
+        {/*<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>*/}
+        {/*  <TouchableOpacity*/}
+        {/*      style={styles.btn}*/}
+        {/*      onPress={() => insRef.current.show()}>*/}
+        {/*    <Text style={{ color: 'red', textAlign: 'center' }}>Login now</Text>*/}
+        {/*  </TouchableOpacity>*/}
+        {/*  <TouchableOpacity*/}
+        {/*      style={[styles.btn, { marginTop: 10, backgroundColor: 'green' }]}*/}
+        {/*      onPress={onClear}>*/}
+        {/*    <Text style={{ color: 'white', textAlign: 'center' }}>Logout</Text>*/}
+        {/*  </TouchableOpacity>*/}
+        {/*  <Text style={{ margin: 10 }}>Token: {token}</Text>*/}
+        {/*  <InstagramLogin*/}
+        {/*      ref={insRef}*/}
+        {/*      appId='263648452966840'*/}
+        {/*      appSecret='d2740d52bed9f78d175b166083689574'*/}
+        {/*      redirectUrl='https://google.com/'*/}
+        {/*      scopes={['user_profile', 'user_media']}*/}
+        {/*      onLoginSuccess={(token) => console.log("my tocken is",token)}*/}
+        {/*      onLoginFailure={(data) => console.log("data error",data)}*/}
+        {/*  />*/}
+        {/*</View>*/}
       </ScrollView>
     </View>
   );
@@ -147,7 +195,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   category: {
-    backgroundColor: 'rgba(227, 151, 39, 0.7)',
+    backgroundColor: colors.primaryColor,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,

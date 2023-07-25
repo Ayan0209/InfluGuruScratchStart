@@ -2,6 +2,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {colors} from "../utils/constants";
 
 const MatchedScreen = () => {
   const navigation = useNavigation();
@@ -30,7 +31,7 @@ const MatchedScreen = () => {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#eba134',
+      backgroundColor: colors.primaryColor,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -61,7 +62,7 @@ const MatchedScreen = () => {
       marginTop: 32,
     },
     buttonText: {
-      color: '#eba134',
+      color: colors.primaryColor,
       fontSize: 16,
       fontWeight: 'bold',
       textAlign: 'center',

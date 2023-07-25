@@ -6,6 +6,7 @@ import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
+import {colors} from "../utils/constants";
 
 const Socials = () => {
   const navigation = useNavigation();
@@ -40,7 +41,7 @@ const Socials = () => {
         <TextInput
           style={styles.textInput}
           placeholder="Username"
-          placeholderTextColor="rgba(227, 151, 39, 0.7)"
+          placeholderTextColor={'grey'}
           value={username}
           onChangeText={handleUsernameChange}
         />
@@ -77,15 +78,16 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderColor: 'rgba(227, 151, 39, 0.7)',
+    borderColor: colors.inputColor,
     borderRadius: 10,
     paddingVertical: 12,
+    fontSize:18,
     paddingHorizontal: 16,
     marginBottom: 24,
     color: 'black',
   },
   button: {
-    backgroundColor: 'rgba(227, 151, 39, 0.7)',
+    backgroundColor: colors.primaryColor,
     borderRadius: 10,
     paddingVertical: 12,
   },
