@@ -122,9 +122,11 @@ const BusinessModalScreen = () => {
           console.log('Image URL:', url);
           handleUpdateProfile(url);
         }).catch((error) => {
+          setIsLoading(false)
           console.log('Error getting image URL:', error);
         });
       }).catch((error) => {
+        setIsLoading(false)
         console.log('Error uploading image:', error);
       });
     } catch (e) {
@@ -137,6 +139,7 @@ const BusinessModalScreen = () => {
   };
 
   const handleUpdateProfile = (url) => {
+
     updateDoc(doc(db, 'users', user.uid), {
       photoURL:url,
       displayName,
@@ -145,9 +148,11 @@ const BusinessModalScreen = () => {
       timestamp: serverTimestamp(),
     })
       .then(() => {
+        setIsLoading(false)
         navigation.navigate('Interests',{type:'business'})
       })
       .catch((error) => {
+        setIsLoading(false)
         console.error('Error updating business profile:', error);
       });
   };

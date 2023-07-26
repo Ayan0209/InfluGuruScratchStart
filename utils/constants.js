@@ -26,6 +26,10 @@ export const colors = {
   gradient3: '#76DD78',
   inputColor:'#895ff0',
   statusBarColor:'white',
+  chatBadgeColor:'#76b7ff',
+  chatRowBack:'#dcedff',
+  chatRowBack2:'#a9d2ff',
+  cardBack:'#CBE5FF'
 };
 
 export const fontType = {

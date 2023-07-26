@@ -43,7 +43,7 @@ const MessageScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Header title={getMatchedUserInfo(matchDetails?.users, user.uid).displayName} callEnabled />
+            <Header title={getMatchedUserInfo(matchDetails?.users, user.uid).displayName}  />
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.keyboardContainer}
@@ -73,7 +73,7 @@ const MessageScreen = () => {
                         onSubmitEditing={sendMessage}
                         value={input}
                     />
-                    <Button onPress={sendMessage} title="Send" color="#eba134" />
+                    <Button onPress={sendMessage} title="Send" color={colors.primaryColor} />
                 </View>
             </KeyboardAvoidingView>
         </View>

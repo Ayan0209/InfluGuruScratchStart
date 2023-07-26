@@ -1,29 +1,17 @@
 import React from 'react';
-import {
-    SafeAreaView,
-    Text,
-    View,
-    StyleSheet,
-    Button
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 
-const Loader = ({isLoading,loadingText}) => {
-    return (
-        <SafeAreaView style={{flex: 1}}>
-            <View style={styles.container}>
-                <Spinner
-                    //visibility of Overlay Loading Spinner
-                    visible={isLoading}
-                    //Text with the Spinner
-                    textContent={loadingText}
-                    //Text style of the Spinner Text
-                    textStyle={styles.spinnerTextStyle}
-                />
-            </View>
-        </SafeAreaView>
-    );
+const Loader = ({isLoading, loadingText}) => {
+    return (<Spinner
+            //visibility of Overlay Loading Spinner
+            visible={isLoading}
+            //Text with the Spinner
+            textContent={loadingText}
+            //Text style of the Spinner Text
+            textStyle={styles.spinnerTextStyle}
+        /> );
 };
 
 export default Loader;

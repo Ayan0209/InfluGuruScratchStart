@@ -9,6 +9,7 @@ import {collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, se
 import generateId from '../lib/generateId'
 import {colors, fontType} from "../utils/constants";
 import LinearGradient from "react-native-linear-gradient";
+import {DrawerActions} from '@react-navigation/native'
 
 const screenHeight = Dimensions.get('window').height;
 const cardHeight = screenHeight * 0.6;
@@ -173,14 +174,7 @@ const HomeScreen = () => {
             <View style={styles.fullScreen}>
                 <View style={styles.container}>
                     <TouchableOpacity onPress={() => {
-                        if (userType === "influencer") {
-                            navigation.navigate("InfluencerProfile");
-                        } else if (userType === "brand") {
-                            navigation.navigate("BrandProfile");
-                        } else {
-                            // Default navigation
-                            navigation.navigate("Profile");
-                        }
+                        navigation.dispatch(DrawerActions.openDrawer())
                     }}>
                         <Image style={styles.logoImage} source={require('../images/roundLogo.png')} />
                     </TouchableOpacity>

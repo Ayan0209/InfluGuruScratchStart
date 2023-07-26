@@ -1,10 +1,30 @@
-import React from 'react';
-import {View,Text, ImageBackground, StyleSheet} from "react-native";
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, ImageBackground, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import {colors} from "../utils/constants";
+import InstagramLogin from "react-native-instagram-login";
+import axios from "axios";
+
 
 const InstaProfile = () => {
+    const insRef = useRef();
+    const [token, setToken] = useState(null);
+
+
+    const callApi=()=>{
+        const apiUrl = `https://graph.instagram.com/${token?.user_id}?fields=id,username,account_type&access_token=${token?.access_token}`; // Replace this with your API endpoint URL
+        axios
+            .get(apiUrl)
+            .then(response => {
+                // Handle successful response
+                console.log('instagram api res:', response.data);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error:', error);
+            });
+    }
     return (
-        <View>
+        <View style={{flex:1}}>
             <ImageBackground style={styles.cardImg} source={require('../images/instaUser.png')}/>
             <View>
                 <Text style={styles.userName}>Jhon Due, 23</Text>
@@ -21,14 +41,41 @@ const InstaProfile = () => {
                 </View>
                 <View style={{justifyContent:'center',alignItems: 'center'}}>
                     <Text style={styles.userD}>Posts</Text>
-                    <Text style={styles.userValue}>26</Text>
+                    <Text style={styles.userValue}>29</Text>
                 </View>
                 <View style={{justifyContent:'center',alignItems: 'center'}}>
                     <Text style={styles.userD}>Platforms</Text>
                     <Text style={styles.userValue}>fb google</Text>
 
                 </View>
+
             </View>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <TouchableOpacity
+
+                    onPress={() => insRef.current.show()}>
+                    <Text style={{ color: 'red', textAlign: 'center' }}>Login now</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[ { marginTop: 10, backgroundColor: 'green' }]}
+                    onPress={callApi}>
+                    <Text style={{ color: 'white', textAlign: 'center' }}>Logout</Text>
+                </TouchableOpacity>
+                <Text style={{ margin: 10 }}>Token: {token?.access_token}</Text>
+                <InstagramLogin
+                    ref={insRef}
+                    appId='821189732727507'
+                    appSecret='4a786acf1c6c1c8474ca11a9103a89f9'
+                    redirectUrl='https://www.google.com/'
+                    scopes={['user_profile', 'user_media']}
+                    onLoginSuccess={(token) => {
+                        console.log("token",token)
+                        setToken(token)
+                    }}
+                    onLoginFailure={(data) => console.log("data error",data)}
+                />
+            </View>
+
         </View>
     );
 };

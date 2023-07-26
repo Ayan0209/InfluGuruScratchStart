@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react'
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet, Image} from 'react-native'
+import {colors} from "../utils/constants";
 
 
 const ReceiverMessage = ({message}) => {
@@ -15,7 +16,7 @@ const ReceiverMessage = ({message}) => {
 const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      backgroundColor: '#eba134',
+      backgroundColor: colors.chatBadgeColor ,
       borderRadius: 20,
       borderTopRightRadius: 0,
       paddingVertical: 8,
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
       borderRadius: 9999,
     },
   });
-  
+
 
 
 export default ReceiverMessage

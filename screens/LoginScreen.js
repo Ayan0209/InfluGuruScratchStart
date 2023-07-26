@@ -5,19 +5,18 @@ import {
     Image,
     Keyboard,
     KeyboardAvoidingView,
-    Platform, Pressable,
+    Platform,
+    Pressable,
     SafeAreaView,
     StatusBar,
     StyleSheet,
     Text,
     TextInput,
-    TouchableOpacity,
     View,
 } from 'react-native';
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {db, FIREBASE_AUTH} from '../firebase';
-import {AntDesign} from '@expo/vector-icons';
 import {colors, fontType} from "../utils/constants";
 import CustomButton from "./Component/CustomButton";
 import {doc, onSnapshot} from "firebase/firestore";
@@ -29,8 +28,8 @@ const LoginScreen = () => {
     const navigation = useNavigation();
     //const [email, setEmail] = useState('neilmjoshi@gmail.com');
 
-    //const [email, setEmail] = useState('agauta20@asu.edu');
-     const [email, setEmail] = useState('brand@gmail.com');
+    const [email, setEmail] = useState('influ@gmail.com');
+   // const [email, setEmail] = useState('brand1@gmail.com');
     const [password, setPassword] = useState('123456789');
     const [loading, setLoading] = useState(false);
     const [logoVisible, setLogoVisible] = useState(true);
@@ -62,16 +61,16 @@ const LoginScreen = () => {
         setLoading(true);
         try {
             const response = await signInWithEmailAndPassword(auth, email, password);
-            const uid=response.user.uid;
-            console.log("s rspon",uid);
+            const uid = response.user.uid;
+            console.log("s rspon", uid);
             onSnapshot(doc(db, "users", uid), (snapshot) => {
                 if (!snapshot.exists()) {
                     navigation.navigate("ProfileType");
                 } else {
-                        if(!snapshot.data().profileComplete){
-                            //navigation.navigate("ProfileType")
-                        }
-                 // console.log("snapshot.data",snapshot.data())
+                    if (!snapshot.data().profileComplete) {
+                        //navigation.navigate("ProfileType")
+                    }
+                    // console.log("snapshot.data",snapshot.data())
                 }
             })
             // navigation.navigate('ProfileType')
@@ -118,15 +117,12 @@ const LoginScreen = () => {
                 <KeyboardAvoidingView
                     style={styles.container}
                     behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-                >
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
                     <View style={styles.imageWrapper}>
-                        {logoVisible && (
-                            <View style={styles.logoContainer}>
-                                <Image
-                                    source={require('../images/BannerLogoUpdated.png')} style={styles.logoImg}/>
-                            </View>
-                        )}
+                        <View style={styles.logoContainer}>
+                            <Image
+                                source={require('../images/BannerLogoUpdated.png')} style={styles.logoImg}/>
+                        </View>
                     </View>
                     <View style={styles.bottomContainer}>
                         <Text style={styles.infoText}>Login/Sign up to continue</Text>
@@ -156,10 +152,10 @@ const LoginScreen = () => {
                                 <CustomButton onPress={signIn} title='Login'/>
                                 <View style={styles.buttonGap}/>
 
-                                <View style={{width:'100%',justifyContent:'center',alignItems: "center"}}>
+                                <View style={{width: '100%', justifyContent: 'center', alignItems: "center"}}>
                                     <Text style={styles.textNewUser}>Are you a new User ?
                                         <Pressable onPress={signUp}>
-                                        <Text style={styles.textNewProfile}>Create New Profile</Text>
+                                            <Text style={styles.textNewProfile}>Create New Profile</Text>
                                         </Pressable>
                                     </Text>
                                 </View>

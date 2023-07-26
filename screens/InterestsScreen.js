@@ -6,10 +6,12 @@ import { getAuth } from 'firebase/auth';
 import { db } from '../firebase';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {colors, fontType} from "../utils/constants";
+import Loader from "./Loader";
 
 const InterestsScreen = () => {
   const navigation = useNavigation();
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
   const route = useRoute();
@@ -28,7 +30,7 @@ const InterestsScreen = () => {
 
   const handleConfirm = () => {
     const category = selectedInterests;
-
+    setIsLoading(true)
     if (user) {
       updateDoc(doc(db, 'users', user.uid), {
         category: category,
@@ -36,6 +38,7 @@ const InterestsScreen = () => {
         timestamp: serverTimestamp(),
       })
         .then(() => {
+          setIsLoading(false)
           if(type==='business'){
             navigation.navigate('Home');
           }else{
@@ -44,6 +47,7 @@ const InterestsScreen = () => {
 
         })
         .catch((error) => {
+          setIsLoading(false)
           alert(error.message);
         });
     }
@@ -99,6 +103,7 @@ const InterestsScreen = () => {
             <Text style={styles.confirmButtonText}>Confirm</Text>
         </TouchableOpacity>
       </View>
+      <Loader loadingText={'Loading...'} isLoading={isLoading}/>
     </SafeAreaView>
   );
 };

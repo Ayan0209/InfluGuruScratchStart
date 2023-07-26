@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet,ActivityIndicator, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {getAuth} from 'firebase/auth';
 import {useNavigation} from '@react-navigation/native';
@@ -7,9 +7,11 @@ import AuthHeader from "../components/AuthHeader";
 import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "../firebase";
 import {colors} from "../utils/constants";
+import Loader from "./Loader";
 
 const NewProfile = () => {
     const [selectedType, setSelectedType] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const auth = getAuth();
     const user = auth.currentUser;
     const navigation = useNavigation();
@@ -19,6 +21,7 @@ const NewProfile = () => {
     };
 
     const handleContinue = () => {
+        setIsLoading(true);
         // Update the user's "type" attribute in Firestore with the selectedType
         // Perform any necessary actions upon pressing continue
         // if( selectedType == null){
@@ -40,6 +43,7 @@ const NewProfile = () => {
             createdAt: serverTimestamp(),
           })
             .then(() => {
+                setIsLoading(false)
                 if(type==="brand"){
                     navigation.navigate('BrandModal',{ type:'brand' });
                 }
@@ -48,6 +52,7 @@ const NewProfile = () => {
                 }
             })
             .catch((error) => {
+                setIsLoading(false)
               alert(error.message);
             });
         }
@@ -56,7 +61,9 @@ const NewProfile = () => {
     return (
         <View style={styles.container}>
             <AuthHeader title={'Select your Profile'}/>
+           <Loader  isLoading={isLoading} loadingText={'Loading...'} />
             <View style={styles.contentContainer}>
+
                 <View style={styles.iconContainer}>
                     <TouchableOpacity
                         style={[
@@ -92,7 +99,9 @@ const NewProfile = () => {
                 >
                     <Text style={styles.buttonText}>Continue</Text>
                 </TouchableOpacity>
+
             </View>
+
         </View>
     );
 };
