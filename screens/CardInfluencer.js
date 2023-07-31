@@ -13,7 +13,7 @@ const CardInfluencer = ({user}) => {
     const [instaData, setInstaData] = useState(null);
     const [postList, setPostList] = useState([]);
     console.log("user data=========================<>", user)
-    const access_token='IGQVJVMU5OM0hQRTdYd2ZAzYnVOTXlMSHJlUTJxbzhTYmxURlJmOGstUlJUYmhWU19nSnFxMDlfREZAxNkkxLWJBWUVLLVNBUFg5bWt6YzJCMnN1Yld3dXBheWk4ZAEpvQTBpOExBTkFUSTdOMG53bUhSUAZDZD';
+    const access_token='IGQVJWVG5IR0pvUlcyVVpFcDUwb2F6UjhxREp2OE1pRzF5TW54TmlneWxRUEdhc2c5T29RRGoyMUlWdkh5ZAkdNRl9TdDZArOUUzbkxCeVBLRjBHOGZA6V19GbUUtTjdLOGNoakNhOVI1UU16N3FXaFRqeQZDZD';
     const instaUserId='6403604719747235';
 
     useEffect(() => {
@@ -64,15 +64,15 @@ const CardInfluencer = ({user}) => {
         <View style={styles.container}>
 
             <View style={styles.card}>
-                <Text style={styles.displayName}>{user.displayName}</Text>
+                <Text style={styles.displayName}>{user?.displayName}</Text>
                 <View style={[styles.row]}>
-                    <Text style={styles.age}>{user.city}</Text>
-                    <Text style={styles.gender}>{user.productName}</Text>
+                    <Text style={styles.age}>{user?.city}</Text>
+                    <Text style={styles.gender}>{user?.productName}</Text>
                 </View>
             </View>
             <View style={{paddingHorizontal: 20}}>
                 <Text style={styles.title}>Bio </Text>
-                <Text style={styles.bio}>{user.bio}</Text>
+                <Text style={styles.bio}>{user?.bio}</Text>
                 <View style={{flexDirection: 'row'}}>
                     <View style={{flex: 1}}>
                         <Text style={styles.title}>Interests</Text>

@@ -6,10 +6,10 @@ const CardBrand = ({user}) => {
     return (
         <View style={{flex: 1}}>
             <View style={styles.card}>
-                <Text style={styles.displayName}>{user.displayName}</Text>
+                <Text style={styles.displayName}>{user?.displayName}</Text>
                 <View style={[styles.row]}>
-                    <Text style={styles.gender}>{user.productName}</Text>
-                    <Text style={styles.age}>{user.city}</Text>
+                    <Text style={styles.gender}>{user?.productName}</Text>
+                    <Text style={styles.age}>{user?.city}</Text>
                 </View>
             </View>
             <View style={{flex: 1, paddingHorizontal: 20, marginTop: 10}}>
@@ -20,18 +20,17 @@ const CardBrand = ({user}) => {
                     not only five centuries, but also the leap .</Text>
                 <Text style={styles.title}>Product Category</Text>
                 <View style={styles.categoriesContainer}>
-                    {user.productCategory.map((cat, index) => (
+                    {user?.productCategory.map((cat, index) => (
                         <View key={index} style={styles.category}>
                             <Text style={styles.categoryText}>{cat}</Text>
                         </View>
                     ))}
-
                 </View>
                 <Text style={styles.title}>Product Images</Text>
 
                 <Text style={styles.title}>Promotion Type</Text>
                 <View style={styles.categoriesContainer}>
-                    {user.promotionTypes.map((category, index) => (
+                    {user?.promotionTypes.map((category, index) => (
                         <View key={index} style={styles.category}>
                             <Text style={styles.categoryText}>{category}</Text>
                         </View>

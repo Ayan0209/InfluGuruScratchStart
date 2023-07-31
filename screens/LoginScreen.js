@@ -28,8 +28,8 @@ const LoginScreen = () => {
     const navigation = useNavigation();
     //const [email, setEmail] = useState('neilmjoshi@gmail.com');
 
-    const [email, setEmail] = useState('influ@gmail.com');
-   // const [email, setEmail] = useState('brand1@gmail.com');
+    //const [email, setEmail] = useState('influ@gmail.com');
+    const [email, setEmail] = useState('brand1@gmail.com');
     const [password, setPassword] = useState('123456789');
     const [loading, setLoading] = useState(false);
     const [logoVisible, setLogoVisible] = useState(true);

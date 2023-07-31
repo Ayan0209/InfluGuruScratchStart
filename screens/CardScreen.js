@@ -12,17 +12,15 @@ import CardBrand from "./CardBrand";
 const CardScreen = ({ route }) => {
   const navigation = useNavigation();
   const { user } = route.params;
-  const userName = user.instaUserName;
+  const userName = user?.instaUserName && user?.instaUserName ;
   const [profileData, setProfileData] = useState(null);
   //console.log("The card data is: ", user);
   const insRef = useRef();
   const [token, setToken] = useState(null);
 
-
   const onClear = () => {
 
   };
-
 
   const openInstagramProfile = async () => {
     const profileUrl = `https://www.instagram.com/${userName}/`;
@@ -40,10 +38,10 @@ const CardScreen = ({ route }) => {
     <View style={styles.container}>
       <Header title="" />
       <View style={styles.imageContainer}>
-        <Image source={{ uri: user.photoURL }} style={styles.image} />
+        <Image source={{ uri: user?.photoURL }} style={styles.image} />
       </View>
       <ScrollView style={styles.panel}>
-        {user.type === 'influencer' ? (
+        {user?.type === 'influencer' ? (
          <CardInfluencer user={user}/>
         ) : (
          <CardBrand user={user}/>
