@@ -13,8 +13,9 @@ const CardInfluencer = ({user}) => {
     const [instaData, setInstaData] = useState(null);
     const [postList, setPostList] = useState([]);
     console.log("user data=========================<>", user)
-    const access_token='IGQVJWVG5IR0pvUlcyVVpFcDUwb2F6UjhxREp2OE1pRzF5TW54TmlneWxRUEdhc2c5T29RRGoyMUlWdkh5ZAkdNRl9TdDZArOUUzbkxCeVBLRjBHOGZA6V19GbUUtTjdLOGNoakNhOVI1UU16N3FXaFRqeQZDZD';
-    const instaUserId='6403604719747235';
+    const access_token= user?.instaUsertoken?.access_token;
+    const instaUserId= user?.instaUsertoken?.user_id;
+
 
     useEffect(() => {
         getPosts();
@@ -29,7 +30,7 @@ const CardInfluencer = ({user}) => {
                 .then(response => {
                     // Handle successful response
                     setPostList(response.data.data)
-                    console.log('instagram api res:', response.data);
+                    console.log('instagram api res**:', response.data);
                 })
                 .catch(error => {
                     // Handle error
@@ -56,7 +57,7 @@ const CardInfluencer = ({user}) => {
     const renderItemRow=({item})=>(
             <View style={{flex:1,padding:5,width: itemWidth }}>
                 {console.log('*************************Item',item)}
-                <Image source={{ uri: item?.thumbnail_url  }} style={{height:180,width: 140,borderRadius: 5}} />
+                <Image source={{ uri: item?.media_url  }} style={{height:180,width: 140,borderRadius: 5}} />
             </View>
     )
 

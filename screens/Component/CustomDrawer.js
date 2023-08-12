@@ -102,7 +102,16 @@ const CustomDrawer = props => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate('Login')} style={{paddingVertical: 15}}>
+                <TouchableOpacity onPress={() => {
+                    FIREBASE_AUTH.signOut()
+                        {/*.then(() => {
+                            navigation.navigate('Login'); // Navigate to your login screen
+                        })
+                        .catch((error) => {
+            // Handle sign-out error, if any
+            console.error('Error signing out:', error);
+          });*/}
+      }} style={{paddingVertical: 15}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Ionicons name="exit-outline" size={22}/>
                         <Text

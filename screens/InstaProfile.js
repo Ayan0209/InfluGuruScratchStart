@@ -27,7 +27,7 @@ const InstaProfile = () => {
         <View style={{flex:1}}>
             <ImageBackground style={styles.cardImg} source={require('../images/instaUser.png')}/>
             <View>
-                <Text style={styles.userName}>Jhon Due, 23</Text>
+                <Text style={styles.userName}>John Due, 23</Text>
             </View>
             <View style={{marginTop:20,
                 flexDirection:'row',
@@ -64,8 +64,8 @@ const InstaProfile = () => {
                 <Text style={{ margin: 10 }}>Token: {token?.access_token}</Text>
                 <InstagramLogin
                     ref={insRef}
-                    appId='821189732727507'
-                    appSecret='4a786acf1c6c1c8474ca11a9103a89f9'
+                    appId='236373202081307'
+                    appSecret='ad1f7494965c3988eacb878d73b7ec12'
                     redirectUrl='https://www.google.com/'
                     scopes={['user_profile', 'user_media']}
                     onLoginSuccess={(token) => {

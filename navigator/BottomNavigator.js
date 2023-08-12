@@ -11,6 +11,7 @@ import InstaProfile from "../screens/InstaProfile";
 import ProductsScreen from "../screens/ProductsScreen";
 import MatchedScreen from "../screens/MatchedScreen";
 import MessageScreen from "../screens/MessageScreen";
+import ProfilePage from '../screens/ProfilePage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -51,7 +52,7 @@ function ProfileStack() {
             screenOptions={{headerShown: false}}>
             <Stack.Screen
                 name="Profile"
-                component={InstaProfile}
+                component={ProfilePage}
                 options={{headerShown: false}}
             />
 
