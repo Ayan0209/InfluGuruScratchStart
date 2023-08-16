@@ -66,6 +66,7 @@ const HomeScreen = () => {
                                 photoURL: userData.photoURL,
                                 productName: product.productName,
                                 productCategory: product.productCategory,
+                                productDescription: product.productDescription,
                                 city: userData.city,
                                 promotionTypes: product.promotionTypes,
                                 type: userData.type,

@@ -34,6 +34,7 @@ const ProductsScreen = () => {
     const [productName, setProductName] = useState('');
     const [productCategory, setProductCategory] = useState([]);
     const [promotionTypes, setPromotionTypes] = useState([]);
+    const [productDescription, setProductDescription] = useState('');
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -47,10 +48,12 @@ const ProductsScreen = () => {
             setProductName('');
             setProductCategory('');
             setPromotionTypes([]);
+            setProductDescription('');
         } else {
             setProductName(product.productName || '');
             setProductCategory(product.productCategory || '');
             setPromotionTypes(product.promotionTypes || []);
+            setProductDescription(product.productDescription || '');
         }
     }, []);
 
@@ -70,6 +73,7 @@ const ProductsScreen = () => {
             productName,
             productCategory,
             promotionTypes,
+            productDescription,
         };
 
         // Update the user's document in the database
@@ -121,13 +125,19 @@ const ProductsScreen = () => {
 
     return (
         <View style={styles.container}>
-            <AuthHeader title="Products new"/>
+            <AuthHeader title="Product Profile"/>
             <View style={styles.inputContainer}>
                 <TextInput
                     style={styles.input}
                     placeholder="Product Name"
                     value={productName}
                     onChangeText={setProductName}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Product Description"
+                    value={productDescription}
+                    onChangeText={setProductDescription}
                 />
                 <MultipleSelectList
                     setSelected={(val) => setProductCategory(val)}

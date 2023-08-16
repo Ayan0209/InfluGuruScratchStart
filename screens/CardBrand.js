@@ -12,12 +12,10 @@ const CardBrand = ({user}) => {
                     <Text style={styles.age}>{user?.city}</Text>
                 </View>
             </View>
+            {console.log("product user: ",user)}
             <View style={{flex: 1, paddingHorizontal: 20, marginTop: 10}}>
                 <Text style={styles.title}>Product Description</Text>
-                <Text style={styles.productText}>Lorem Ipsum is simply dummy text of the printing and typesetting
-                    industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                    unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived
-                    not only five centuries, but also the leap .</Text>
+                <Text style={styles.productText}>{user?.productDescription}</Text>
                 <Text style={styles.title}>Product Category</Text>
                 <View style={styles.categoriesContainer}>
                     {user?.productCategory.map((cat, index) => (

@@ -40,6 +40,7 @@ const CardScreen = ({ route }) => {
       <View style={styles.imageContainer}>
         <Image source={{ uri: user?.photoURL }} style={styles.image} />
       </View>
+      {console.log("card user", user)}
       <ScrollView style={styles.panel}>
         {user?.type === 'influencer' ? (
          <CardInfluencer user={user}/>
