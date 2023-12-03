@@ -5,9 +5,10 @@ import {db, FIREBASE_AUTH} from '../../firebase';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {colors, fontType} from "../../utils/constants";
-import {getAuth} from "firebase/auth";
+
 import {doc, onSnapshot} from "firebase/firestore";
 import {useNavigation} from "@react-navigation/native";
+import {getAuth} from "firebase/auth";
 
 const CustomDrawer = props => {
 
@@ -102,16 +103,7 @@ const CustomDrawer = props => {
                         </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {
-                    FIREBASE_AUTH.signOut()
-                        {/*.then(() => {
-                            navigation.navigate('Login'); // Navigate to your login screen
-                        })
-                        .catch((error) => {
-            // Handle sign-out error, if any
-            console.error('Error signing out:', error);
-          });*/}
-      }} style={{paddingVertical: 15}}>
+                <TouchableOpacity onPress={() =>auth.signOut()} style={{paddingVertical: 15}}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Ionicons name="exit-outline" size={22}/>
                         <Text

@@ -23,9 +23,10 @@ import {doc, onSnapshot} from "firebase/firestore";
 
 const staticImage = require('../images/bannerLogo.png');
 
-const LoginScreen = () => {
+const LoginScreen = ({ route }) => {
 
     const navigation = useNavigation();
+    const { load } = route.params;
     //const [email, setEmail] = useState('neilmjoshi@gmail.com');
 
     //const [email, setEmail] = useState('influ@gmail.com');
@@ -75,6 +76,7 @@ const LoginScreen = () => {
             })
             // navigation.navigate('ProfileType')
         } catch (error) {
+            setLoading(false);
             console.log(error.message);
         } finally {
             setLoading(false);
@@ -89,6 +91,7 @@ const LoginScreen = () => {
                 navigation.navigate("ProfileType")
             })
                 .catch(error => {
+                    setLoading(false);
                     if (error.code === 'auth/email-already-in-use') {
                         navigation.navigate('ProfileType')
                         console.log('That email address is already in use!');
@@ -103,6 +106,7 @@ const LoginScreen = () => {
             console.log(response);
 
         } catch (error) {
+            setLoading(false);
             console.log(error);
         } finally {
             setLoading(false);
@@ -145,6 +149,8 @@ const LoginScreen = () => {
                                 placeholderTextColor="#E39727"
                             />
                         </View>
+
+
                         {loading ? (
                             <ActivityIndicator size="large" color="#0000ff"/>
                         ) : (

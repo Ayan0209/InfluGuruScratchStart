@@ -20,7 +20,6 @@ const CardInfluencer = ({user}) => {
     useEffect(() => {
         getPosts();
         callApi();
-
     }, []);
     const getPosts=()=>{
         const apiUrl = `https://graph.instagram.com/${instaUserId}/media?fields=id,caption,media_type,media_url,permalink,thumbnail_url,timestamp&access_token=${access_token}`

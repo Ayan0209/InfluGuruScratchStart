@@ -12,14 +12,13 @@ import BusinessModalScreen from "../screens/BusinessModalScreen";
 import ProductList from "../screens/ProductList";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import LoginScreen from "../screens/LoginScreen";
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {db, FIREBASE_AUTH} from "../firebase";
 import {doc, onSnapshot} from "firebase/firestore";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {createDrawerNavigator} from "@react-navigation/drawer";
 import NewProfile from "../screens/NewProfile";
 import InterestsHomeScreen from "../screens/InterestsHomeScreen";
-import InstaProfile from "../screens/InstaProfile";
 import ProductsScreen from "../screens/ProductsScreen";
 
 const Stack = createNativeStackNavigator();
@@ -51,7 +50,7 @@ const renderScreens = () => {
     const [myUser, setUser] = useState(null);
     const [userType, setUserType] = useState(null);
     const [profileComplete, setProfileComplete] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         // Check if the user is logged in
@@ -59,6 +58,8 @@ const renderScreens = () => {
             if (user) {
                 // If the user is logged in, check the profile completion status
                 checkProfileCompletion(user.uid);
+            }else{
+                setUser(null);
             }
         });
 
@@ -68,9 +69,11 @@ const renderScreens = () => {
 
     const checkProfileCompletion = (userId) => {
         console.log("user-----&&&&&&&-------id", userId);
+        setLoading(true)
         // Query the Firestore to get the user's profile document
         onSnapshot(doc(db, "users", userId), (snapshot) => {
             // console.log("Snapshot:", snapshot)
+            setLoading(false)
             if (!snapshot.exists()) {
                 console.log("render screen Snapshot")
                 setProfileComplete(false);
@@ -210,7 +213,7 @@ const renderScreens = () => {
 
     } else {
         return (<Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Login" component={LoginScreen}/>
+            <Stack.Screen name="Login" component={LoginScreen}  initialParams={{load:loading}} />
             <Stack.Screen name="ProfileType" component={NewProfile}/>
             <Stack.Screen name="Modal" component={ModalScreen}/>
             <Stack.Screen name="BrandModal" component={BusinessModalScreen}/>
