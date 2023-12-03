@@ -87,15 +87,15 @@ const BottomNavigator = () => {
                             ),
                         }}
             />
-            <Tab.Screen
-                name="Profile" component={ProfileStack}
-                options={{
-                    tabBarLabel: 'Profile',
-                    tabBarIcon: ({color, size}) => (
-                        <FontAwesome name="user-circle-o" size={size} color={color}/>
-                    ),
-                }}
-            />
+            {/*<Tab.Screen*/}
+            {/*    name="Profile" component={ProfileStack}*/}
+            {/*    options={{*/}
+            {/*        tabBarLabel: 'Profile',*/}
+            {/*        tabBarIcon: ({color, size}) => (*/}
+            {/*            <FontAwesome name="user-circle-o" size={size} color={color}/>*/}
+            {/*        ),*/}
+            {/*    }}*/}
+            {/*/>*/}
         </Tab.Navigator>
     );
 };
