@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import {SafeAreaView, View, Text, TouchableOpacity, StyleSheet, StatusBar} from 'react-native';
 import Header from '../components/Header';
 import { getFirestore, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { db } from '../firebase';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {colors, fontType} from "../utils/constants";
+import Loader from "./Loader";
 
 const InterestsScreen = () => {
   const navigation = useNavigation();
   const [selectedInterests, setSelectedInterests] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const auth = getAuth();
   const user = auth.currentUser;
+  const route = useRoute();
+  const type = route?.params?.type;
+  console.log("intrest type",type)
 
   const handleToggleInterest = (interest) => {
     setSelectedInterests((prevInterests) => {
@@ -21,24 +27,32 @@ const InterestsScreen = () => {
       }
     });
   };
-  
+
   const handleConfirm = () => {
     const category = selectedInterests;
-  
+    setIsLoading(true)
     if (user) {
       updateDoc(doc(db, 'users', user.uid), {
         category: category,
+        profileComplete:true,
         timestamp: serverTimestamp(),
       })
         .then(() => {
-          navigation.navigate('Socials');
+          setIsLoading(false)
+          if(type==='business'){
+            navigation.navigate('Home');
+          }else{
+            navigation.navigate('Socials');
+          }
+
         })
         .catch((error) => {
+          setIsLoading(false)
           alert(error.message);
         });
     }
   };
-  
+
 
   const interests = [
     { id: 1, label: 'Clothing' },
@@ -73,6 +87,7 @@ const InterestsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white}/>
       <Header title="Your Interests" />
       <View style={styles.textContainer}>
         <Text style={styles.descriptionText}>
@@ -88,6 +103,7 @@ const InterestsScreen = () => {
             <Text style={styles.confirmButtonText}>Confirm</Text>
         </TouchableOpacity>
       </View>
+      <Loader loadingText={'Loading...'} isLoading={isLoading}/>
     </SafeAreaView>
   );
 };
@@ -95,8 +111,7 @@ const InterestsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 16,
+    backgroundColor: '#fff',
   },
   textContainer: {
     marginVertical: 16,
@@ -104,7 +119,8 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontSize: 20,
     color: 'grey',
-    fontFamily: 'Rubik',
+    paddingHorizontal:10,
+    fontFamily: fontType.medium,
     textAlign: 'center',
   },
   interestButton: {
@@ -113,15 +129,15 @@ const styles = StyleSheet.create({
     margin: 8,
     borderRadius: 30,
     borderWidth: 1,
-    borderColor: '#E39727',
+    borderColor: '#895ff0',
     justifyContent: 'center',
     alignItems: 'center',
   },
   selectedInterestButton: {
-    backgroundColor: '#E39727',
+    backgroundColor: '#895ff0',
   },
   interestButtonText: {
-    color: '#E39727',
+    color: '#895ff0',
   },
   selectedInterestButtonText: {
     color: '#fff',
@@ -146,7 +162,7 @@ const styles = StyleSheet.create({
     height: 60,
     marginVertical: 16, // Add vertical margin to the confirm button
     borderRadius: 30,
-    backgroundColor: '#E39727',
+    backgroundColor: '#76b7ff',
     justifyContent: 'center',
     alignItems: 'center',
   },

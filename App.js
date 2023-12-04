@@ -1,18 +1,21 @@
+import AppNavigator from "./navigator/AppNavigator";
+import {LogBox, View} from "react-native";
+import Toast from 'react-native-toast-message';
+import {AuthProvider} from "./hooks/useAuth";
 
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import { Button, Text, View } from 'react-native';
-import StackNavigator from './StackNavigator';
-import { AuthProvider } from './hooks/useAuth';
+LogBox.ignoreLogs([
+    'ViewPropTypes will be removed',
+    'ColorPropType will be removed',
+]);
+LogBox.ignoreAllLogs();
 
 export default function App() {
-  
-  return (
-    <NavigationContainer>
-      
-        <StackNavigator/>
-      
-    </NavigationContainer>
-  );
+    return (
+        <View style={{flex: 1}}>
+            <AuthProvider>
+                <AppNavigator/>
+                <Toast/>
+            </AuthProvider>
+        </View>);
 }
 

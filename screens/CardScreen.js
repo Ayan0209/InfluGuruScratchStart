@@ -1,15 +1,26 @@
-import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from '@react-navigation/native';
 import Header from '../components/Header';
+import React, {useEffect, useRef, useState} from 'react';
+import axios from 'axios';
+import InstagramLogin from 'react-native-instagram-login';
+import {colors} from "../utils/constants";
+import CardInfluencer from "./CardInfluencer";
+import CardBrand from "./CardBrand";
 
 const CardScreen = ({ route }) => {
   const navigation = useNavigation();
   const { user } = route.params;
-  const userName = user.instaUserName;
-
+  const userName = user?.instaUserName && user?.instaUserName ;
+  const [profileData, setProfileData] = useState(null);
   //console.log("The card data is: ", user);
+  const insRef = useRef();
+  const [token, setToken] = useState(null);
+
+  const onClear = () => {
+
+  };
 
   const openInstagramProfile = async () => {
     const profileUrl = `https://www.instagram.com/${userName}/`;
@@ -27,56 +38,16 @@ const CardScreen = ({ route }) => {
     <View style={styles.container}>
       <Header title="" />
       <View style={styles.imageContainer}>
-        <Image source={{ uri: user.photoURL }} style={styles.image} />
+        <Image source={{ uri: user?.photoURL }} style={styles.image} />
       </View>
+      {console.log("card user", user)}
       <ScrollView style={styles.panel}>
-        {user.type === 'influencer' ? (
-          <>
-            <Text style={styles.displayName}>{user.displayName}</Text>
-            <View style={styles.row}>
-              <Text style={styles.age}>{user.age},</Text>
-              <Text style={styles.gender}>{user.productName}</Text>
-            </View>
-            <Text style={styles.title}>Bio</Text>
-            <Text style={styles.bio}>{user.bio}</Text>
-            <Text style={styles.title}>Interests</Text>
-            <View style={styles.categoriesContainer}>
-              {user.category.map((category, index) => (
-                <View key={index} style={styles.category}>
-                  <Text style={styles.categoryText}>{category}</Text>
-                </View>
-              ))}
-            </View>
-            <Text style={styles.title}>Location</Text>
-            <Text style={styles.location}>{user.city}</Text>
-            <Text style={styles.title}>Contacts and Socials</Text>
-            <Text style={styles.email}>{user.email}</Text>
-            <TouchableOpacity onPress={openInstagramProfile}>
-              <Ionicons name="logo-instagram" size={45} color="rgba(227, 151, 39, 0.7)" />
-            </TouchableOpacity>
-          </>
+        {user?.type === 'influencer' ? (
+         <CardInfluencer user={user}/>
         ) : (
-          <>
-            <Text style={styles.displayName}>{user.displayName}</Text>
-            <Text style={styles.productName}>{user.productName}</Text>
-            <Text style={styles.title}>Product Category</Text>
-            {user.productCategory.map((cat, index) => (
-                <View key={index} style={styles.category}>
-                  <Text style={styles.categoryText}>{cat}</Text>
-                </View>
-              ))}
-            <Text style={styles.title}>Promotion Type</Text>
-            <View style={styles.categoriesContainer}>
-            {user.promotionTypes.map((type, index) => (
-                <View key={index} style={styles.category}>
-                  <Text style={styles.categoryText}>{type}</Text>
-                </View>
-              ))}
-            </View>
-            <Text style={styles.title}>Location</Text>
-            <Text style={styles.location}>{user.city}</Text>
-          </>
+         <CardBrand user={user}/>
         )}
+
       </ScrollView>
     </View>
   );
@@ -90,7 +61,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   imageContainer: {
-    position: 'relative',
     height: '30%',
   },
   image: {
@@ -100,11 +70,6 @@ const styles = StyleSheet.create({
   },
   panel: {
     flex: 1,
-    marginTop: -24,
-    paddingTop: 24,
-    paddingHorizontal: 16,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
     backgroundColor: 'white',
     zIndex: 1,
   },
@@ -147,7 +112,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   category: {
-    backgroundColor: 'rgba(227, 151, 39, 0.7)',
+    backgroundColor: colors.primaryColor,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 4,

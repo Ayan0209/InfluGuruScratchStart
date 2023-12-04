@@ -8,6 +8,7 @@ import SenderMessage from '../components/SenderMessage';
 import ReceiverMessage from '../components/ReceiverMessage';
 import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+import {colors} from "../utils/constants";
 
 const MessageScreen = () => {
     const auth = getAuth();
@@ -17,7 +18,7 @@ const MessageScreen = () => {
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
 
-    useEffect(() => 
+    useEffect(() =>
         onSnapshot(query(
             collection(db, 'matches', matchDetails.id, 'messages'),
             orderBy('timestamp', 'desc')),
@@ -42,7 +43,7 @@ const MessageScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Header title={getMatchedUserInfo(matchDetails?.users, user.uid).displayName} callEnabled />
+            <Header title={getMatchedUserInfo(matchDetails?.users, user.uid).displayName}  />
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.keyboardContainer}
@@ -63,7 +64,7 @@ const MessageScreen = () => {
                         )}
                     />
                 </TouchableWithoutFeedback>
-                
+
                 <View style={styles.inputContainer}>
                     <TextInput
                         style={styles.textInput}
@@ -72,7 +73,7 @@ const MessageScreen = () => {
                         onSubmitEditing={sendMessage}
                         value={input}
                     />
-                    <Button onPress={sendMessage} title="Send" color="#eba134" />
+                    <Button onPress={sendMessage} title="Send" color={colors.primaryColor} />
                 </View>
             </KeyboardAvoidingView>
         </View>
@@ -82,6 +83,7 @@ const MessageScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:colors.white,
     },
     keyboardContainer: {
         flex: 1,

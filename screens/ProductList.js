@@ -6,6 +6,7 @@ import { db } from '../firebase';
 import Header from '../components/Header';
 import { getAuth } from 'firebase/auth';
 import { Ionicons } from '@expo/vector-icons';
+import {colors} from "../utils/constants";
 
 const ProductList = () => {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ const ProductList = () => {
         if (docSnap.exists()) {
           const userData = docSnap.data();
           if (userData.products && Array.isArray(userData.products)) {
+
             setProducts(userData.products);
           }
         }
@@ -32,14 +34,14 @@ const ProductList = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [products]);
 
   const handleProductPress = (product) => {
-    navigation.navigate('Products', { product });
+    navigation.navigate('Add products', { product:product});
   };
 
   const handleAddProduct = () => {
-    navigation.navigate('Products');
+    navigation.navigate('Add products', { product:'' });
   };
 
   const renderProductItem = ({ item }) => (
@@ -50,6 +52,7 @@ const ProductList = () => {
 
   return (
     <View style={styles.container}>
+      { console.log("products======================>",products)}
       <Header title="Products" />
       <SafeAreaView>
         <FlatList
@@ -88,7 +91,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#E39727',
+    backgroundColor: colors.primaryColor,
     alignItems: 'center',
     justifyContent: 'center',
   },

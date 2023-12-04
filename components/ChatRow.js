@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity, SafeAreaView, Image, StyleSheet } from 'r
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
 import { db } from '../firebase';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import {colors, fontType} from "../utils/constants";
 
 const ChatRow = ({ matchDetails }) => {
 
@@ -29,11 +30,11 @@ const ChatRow = ({ matchDetails }) => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
-      height: 50,
+      height:60,
       alignItems: 'center',
-      backgroundColor: '#f5f5f5',
+      backgroundColor: colors.chatRowBack2,
       paddingVertical: 12,
-      paddingHorizontal: 16,
+      paddingHorizontal: 8,
       marginVertical: 6,
       marginHorizontal: 12,
       borderRadius: 10,
@@ -49,7 +50,8 @@ const ChatRow = ({ matchDetails }) => {
     image: {
       width: 50,
       height: 50,
-      borderRadius: 25,
+      padding:10,
+      borderRadius:8,
       marginRight: 12,
     },
     userInfoContainer: {
@@ -58,15 +60,16 @@ const ChatRow = ({ matchDetails }) => {
     displayName: {
       fontSize: 16,
       fontWeight: '600',
+      fontFamily:fontType.medium
     },
     sayHiText: {
       fontSize: 12,
-      color: '#888888',
+      fontFamily:fontType.regular
     },
   });
-  
+
   return (
-    
+
     <TouchableOpacity style={styles.container} onPress={() => navigation.navigate("Message", {
         matchDetails,
     })}>
@@ -78,7 +81,7 @@ const ChatRow = ({ matchDetails }) => {
         <Text style={styles.sayHiText}>{lastMessage || "Say Hi!"}</Text>
       </View>
     </TouchableOpacity>
-    
+
   );
 };
 

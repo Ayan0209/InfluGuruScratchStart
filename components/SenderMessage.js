@@ -1,6 +1,7 @@
 
 import React, { useEffect } from 'react'
 import {View, Text, TouchableOpacity, SafeAreaView, StyleSheet} from 'react-native'
+import {colors} from "../utils/constants";
 
 const SenderMessage = ({message}) => {
     return(
@@ -12,7 +13,7 @@ const SenderMessage = ({message}) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'purple',
+        backgroundColor: colors.inputColor,
         borderRadius: 20,
         borderTopRightRadius: 0,
         padding: 12,

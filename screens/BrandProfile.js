@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Header from '../components/Header';
 import { useNavigation } from '@react-navigation/native';
+import Loader from "./Loader";
 
 const BrandProfile = () => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGeneralPress = () => {
     navigation.navigate('BrandModal');
@@ -28,6 +30,7 @@ const BrandProfile = () => {
           </View>
         </TouchableOpacity>
       </View>
+      <Loader  isLoading={isLoading} loadingText={'Loading...'} />
     </View>
   );
 };
